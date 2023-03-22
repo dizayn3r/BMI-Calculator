@@ -1,0 +1,66 @@
+import 'package:bmi/bmi.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+
+class BmiCalculationPage extends HookWidget {
+  const BmiCalculationPage({super.key});
+
+  void _update({
+    required ValueNotifier<TextEditingValue> widthController,
+    required ValueNotifier<TextEditingValue> heightController,
+    required ValueNotifier<TextEditingValue> bmiController,
+  }) {
+    final weight = double.tryParse(widthController.value.text);
+    final height = double.tryParse(heightController.value.text);
+    if (weight != null && height != null) {
+      final bmi = calculateBMI(weight, height);
+      final formatted = formattedBMI(bmi);
+      bmiController.value = TextEditingValue(text: formatted);
+    } else {
+      bmiController.value = const TextEditingValue(text: '');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final weightController = useTextEditingController();
+    final heightController = useTextEditingController();
+    final bmiController = useTextEditingController();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('BMI Calculator'),
+      ),
+      body: Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(
+              controller: weightController,
+              decoration: const InputDecoration(labelText: 'Weight (kg)'),
+              keyboardType: TextInputType.number,
+              onChanged: (_) => _update(
+                  widthController: weightController,
+                  heightController: heightController,
+                  bmiController: bmiController),
+              onEditingComplete: () => FocusScope.of(context).nextFocus(),
+            ),
+            TextField(
+              controller: heightController,
+              decoration: const InputDecoration(labelText: 'Height (m)'),
+              keyboardType: TextInputType.number,
+              onChanged: (_) => _update(
+                  widthController: weightController,
+                  heightController: heightController,
+                  bmiController: bmiController),
+            ),
+            TextField(
+              controller: bmiController,
+              decoration: const InputDecoration(labelText: 'BMI'),
+              readOnly: true,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
