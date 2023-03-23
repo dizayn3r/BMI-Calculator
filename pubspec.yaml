@@ -41,6 +41,7 @@ dependencies:
   # we no longer need to import intl explicitly, as bmi already depends on it
   bmi:
     path: packages/bmi
+  google_fonts: ^4.0.3
 
 dev_dependencies:
   flutter_test:
